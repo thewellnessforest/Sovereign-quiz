@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sovereign Lens Assessment</title>
+    <style>
+        :root {
+            --sovereign-pine: #3E6653;
+            --sage-light: #F2F5F3;
+            --text-dark: #2C3E36;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--sage-light);
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #quiz-container {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background-color: #E0E0E0;
+            margin-bottom: 30px;
+            border-radius: 2px;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background-color: var(--sovereign-pine);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        h2 {
+            font-weight: 300;
+            color: var(--sovereign-pine);
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid #D1D9D5;
+            background: var(--white);
+            color: var(--text-dark);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            background-color: var(--sovereign-pine);
+            color: var(--white);
+            border-color: var(--sovereign-pine);
+        }
+
+        #result-container {
+            display: none;
+        }
+
+        .result-title {
+            font-size: 24px;
+            color: var(--sovereign-pine);
+            margin-bottom: 15px;
+        }
+
+        .result-text {
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .restart-btn {
+            background-color: var(--sovereign-pine);
+            color: var(--white);
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <div class="progress-bar"><div id="progress-fill"></div></div>
+    
+    <div id="question-section">
+        <h2 id="question-text">Loading question...</h2>
+        <div id="options-container" class="options-list"></div>
+    </div>
+
+    <div id="result-container">
+        <div class="result-title" id="result-title">Your Results</div>
+        <p class="result-text" id="result-description"></p>
+        <button class="restart-btn" onclick="location.reload()">Begin Again</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "When you notice a pattern in a relationship that feels 'off', what is your first instinct?",
+            options: [
+                { text: "Suppress it to maintain compliance and avoid friction.", type: "Distorted" },
+                { text: "Question if my sight is accurate or if I'm being 'too much'.", type: "Emerging" },
+                { text: "Observe the data point with sovereignty and name the distortion.", type: "Sovereign" }
+            ]
+        },
+        {
+            question: "How do you currently view your personal worth?",
+            options: [
+                { text: "As a transaction—I must provide value to be worthy.", type: "Distorted" },
+                { text: "I'm learning to see it as a frequency, but I still slip into seeking validation.", type: "Emerging" },
+                { text: "As a fixed frequency that requires no external proof.", type: "Sovereign" }
+            ]
+        },
+        {
+            question: "When someone close to you doesn't 'hear' your truth, how do you respond?",
+            options: [
+                { text: "I feel like a victim of their inability to understand me.", type: "Distorted" },
+                { text: "I feel frustrated but keep trying to find a better way to explain.", type: "Emerging" },
+                { text: "I recognize their limitation as their own and maintain my inner accuracy.", type: "Sovereign" }
+            ]
+        }
+    ];
+
+    const results = {
+        "Distorted": {
+            title: "The Compliance Prism",
+            description: "You are currently viewing life through the lens of external validation. Your patterns are often suppressed to keep the peace, but your inner Seer is ready to dismantle these distortions."
+        },
+        "Emerging": {
+            title: "The Awakening Observer",
+            description: "You have begun to recognize the patterns, but you still struggle with 'Inner Accuracy'. You are on the verge of transitioning from seeking validation to claiming sovereignty."
+        },
+        "Sovereign": {
+            title: "The Sovereign Seer",
+            description: "You are operating with high pattern recognition and a clear lens. You understand that observation is your greatest power and your worth is a frequency, not a transaction."
+        }
+    };
+
+    let currentQuestionIndex = 0;
+    let scores = { Distorted: 0, Emerging: 0, Sovereign: 0 };
+
+    function loadQuestion() {
+        const currentQuestion = questions[currentQuestionIndex];
+        const questionText = document.getElementById("question-text");
+        const optionsContainer = document.getElementById("options-container");
+        const progress = document.getElementById("progress-fill");
+
+        // Update progress
+        progress.style.width = ((currentQuestionIndex / questions.length) * 100) + "%";
+
+        questionText.innerText = currentQuestion.question;
+        optionsContainer.innerHTML = "";
+
+        currentQuestion.options.forEach(option => {
+            const button = document.createElement("button");
+            button.innerText = option.text;
+            button.classList.add("option-btn");
+            button.onclick = () => selectOption(option.type);
+            optionsContainer.appendChild(button);
+        });
+    }
+
+    function selectOption(type) {
+        scores[type]++;
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < questions.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        document.getElementById("question-section").style.display = "none";
+        document.getElementById("progress-fill").style.width = "100%";
+        const resultContainer = document.getElementById("result-container");
+        resultContainer.style.display = "block";
+
+        // Determine highest score
+        const winner = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+        
+        document.getElementById("result-title").innerText = results[winner].title;
+        document.getElementById("result-description").innerText = results[winner].description;
+    }
+
+    // Initialize
+    loadQuestion();
+</script>
+
+</body>
+</html>
