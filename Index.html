@@ -1,1 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sovereign Lens Assessment</title>
+    <style>
+        /* FORCE COLORS */
+        html, body {
+            background-color: #3E6653 !important; /* Seer's Pine */
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #E8F0EA !important;
+        }
+
+        #quiz-outer-wrapper {
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #FFFFFF !important;
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-style: italic;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            display: block;
+        }
+
+        /* PROGRESS BAR */
+        #progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            margin-bottom: 30px;
+            border-radius: 2px;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: #FFFFFF !important;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        /* QUESTIONS & BUTTONS */
+        .question-box {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .question-box.active {
+            display: block;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: #0F172A !important; /* Midnight Navy */
+            color: #FFFFFF !important;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: transform 0.2s, background 0.3s;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #1E293B !important;
+            transform: translateY(-2px);
+        }
+
+        #results-box {
+            display: none;
+            background: rgba(0,0,0,0.15);
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-outer-wrapper">
+    <div id="progress-container"><div id="progress-bar"></div></div>
+
+    <div id="intro" class="question-box active">
+        <h1>The Sovereign Lens</h1>
+        <span class="subtitle">Dismantling the distortions that trade authority for compliance.</span>
+        <button class="btn" onclick="startQuiz()">Begin Assessment</button>
+    </div>
+
+    <div id="q1" class="question-box">
+        <p>When you feel "unheard" by those closest to you, what is your internal reaction?</p>
+        <button class="btn" onclick="handleStep(1, 'compliance')">I try to explain myself differently to keep the peace.</button>
+        <button class="btn" onclick="handleStep(1, 'seer')">I feel the fog of distortion and retreat to my inner accuracy.</button>
+    </div>
+
+    <div id="q2" class="question-box">
+        <p>How do you currently view your personal value or "worth"?</p>
+        <button class="btn" onclick="handleStep(2, 'compliance')">It depends on the feedback and validation I receive from others.</button>
+        <button class="btn" onclick="handleStep(2, 'seer')">I am practicing seeing it as an immutable frequency.</button>
+    </div>
+
+    <div id="q3" class="question-box">
+        <p>When faced with a "mental fog," what is your primary goal?</p>
+        <button class="btn" onclick="calculateResults('compliance')">To find a way back to comfort and social harmony.</button>
+        <button class="btn" onclick="calculateResults('seer')">To activate Courageous Sight and dismantle compliance.</button>
+    </div>
+
+    <div id="results-box">
+        <h2 id="res-title" style="color:white;"></h2>
+        <p id="res-body"></p>
+        <button class="btn" onclick="location.reload()">Reset</button>
+    </div>
+</div>
+
+<script>
+    let score = { compliance: 0, seer: 0 };
+    const total = 3;
+
+    function startQuiz() {
+        showStep('q1');
+        updateProgress(33);
+    }
+
+    function handleStep(currentNum, type) {
+        score[type]++;
+        let next = currentNum + 1;
+        showStep('q' + next);
+        updateProgress((next / total) * 100);
+    }
+
+    function showStep(id) {
+        document.querySelectorAll('.question-box').forEach(div => div.classList.remove('active'));
+        document.getElementById('intro').style.display = 'none';
+        document.getElementById(id).classList.add('active');
+    }
+
+    function updateProgress(val) {
+        document.getElementById('progress-bar').style.width = val + '%';
+    }
+
+    function calculateResults(finalType) {
+        score[finalType]++;
+        document.querySelectorAll('.question-box').forEach(div => div.classList.remove('active'));
+        document.getElementById('progress-container').style.display = 'none';
+        
+        const box = document.getElementById('results-box');
+        const title = document.getElementById('res-title');
+        const body = document.getElementById('res-body');
+        box.style.display = 'block';
+
+        if(score.seer > score.compliance) {
+            title.innerText = "You are a Rising Seer.";
+            body.innerText = "You recognize the fog. You are ready to move from Worth as a Transaction to Worth as a Frequency.";
+        } else {
+            title.innerText = "The Compliance Trap.";
+            body.innerText = "You are still trading your authority for comfort. It is time to activate Courageous Sight and stop looking for your reflection in others.";
+        }
+    }
+</script>
+
+</body>
+</html>
 
