@@ -3,49 +3,276 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Sovereign Seer Assessment</title>
+    <title>The Sovereign Seer | Discovery Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;600&family=Pinyon+Script&display=swap" rel="stylesheet">
     <style>
-        /* Earthy Color Palette */
         :root {
-            --forest-green: #0a2e1c; 
-            --moss-green: #1b4d31;
-            --seer-gold: #d4af37; /* Metallic Earthy Gold */
-            --off-white: #fdfdfb;
-            --text-dark: #1a1a1a;
+            --earth-deep: #1b2e21;
+            --forest-moss: #3a5a40;
+            --sage: #a3b18a;
+            --gold: #c2a878;
+            --cream: #fefae0;
+            --text-light: #fefae0;
         }
 
-        body { 
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            /* High-compatibility Gradient */
-            background: var(--forest-green);
-            background: linear-gradient(180deg, var(--forest-green) 0%, var(--moss-green) 100%);
-            color: var(--text-dark);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--earth-deep);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+            background: radial-gradient(circle at top right, #2c4a36, transparent),
+                        linear-gradient(135deg, #1b2e21 0%, #0d1a12 100%);
             min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        #quiz-container { 
-            background: var(--off-white);
-            padding: 40px; 
-            border-radius: 16px;
-            max-width: 500px; 
-            width: 100%; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            border-top: 5px solid var(--seer-gold); /* Gold "Authority" Bar */
+        /* Whimsical Background Elements */
+        .bg-blob {
+            position: fixed;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.4;
+            border-radius: 50%;
         }
 
-        h2 { 
-            font-family: 'Georgia', serif;
-            font-style: italic;
-            color: var(--moss-green);
+        /* Branding */
+        .brand-subtle {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 2.2rem;
+            color: var(--gold);
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
+            opacity: 0.8;
+            letter-spacing: 2px;
         }
 
-        .question { 
-            font-size
-            
+        .container {
+            width: 90%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(194, 168, 120, 0.2);
+            padding: 40px;
+            border-radius: 40px 5px 40px 5px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--cream);
+        }
+
+        .quiz-step { display: none; animation: fadeIn 0.8s ease; }
+        .quiz-step.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Buttons & Inputs */
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 15px 25px;
+            margin-bottom: 15px;
+            background: rgba(58, 90, 64, 0.4);
+            border: 1px solid var(--sage);
+            color: var(--text-light);
+            border-radius: 50px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            background: var(--gold);
+            color: var(--earth-deep);
+            transform: scale(1.02);
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-top: 20px;
+        }
+
+        input[type="email"] {
+            width: 100%;
+            padding: 15px;
+            border-radius: 50px;
+            border: 1px solid var(--gold);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            background: var(--gold);
+            color: var(--earth-deep);
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            width: 100%;
+            letter-spacing: 1px;
+        }
+
+        .result-box {
+            text-align: center;
+        }
+
+        .insight-card {
+            background: rgba(163, 177, 138, 0.1);
+            padding: 20px;
+            border-radius: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            border-left: 4px solid var(--gold);
+        }
+
+        .highlight { color: var(--gold); font-weight: 600; }
+
+        .discount-badge {
+            background: var(--gold);
+            color: var(--earth-deep);
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="bg-blob" style="width: 400px; height: 400px; background: var(--forest-moss); top: -100px; left: -100px;"></div>
+<div class="bg-blob" style="width: 300px; height: 300px; background: var(--gold); bottom: -50px; right: -50px;"></div>
+
+<div class="container">
+    <div class="brand-subtle">Sovereign Seer</div>
+    
+    <div id="quiz-container">
+        <div class="quiz-step active" id="step1">
+            <h2>When you walk into a room, what do you notice first?</h2>
+            <button class="option-btn" onclick="nextStep(2, 2)">The "vibe" or underlying tension that no one is talking about.</button>
+            <button class="option-btn" onclick="nextStep(2, 1)">The physical decor and where people are standing.</button>
+            <button class="option-btn" onclick="nextStep(2, 0)">I'm usually focused on making sure everyone likes me.</button>
+        </div>
+
+        <div class="quiz-step" id="step2">
+            <h2>In the "Sovereign Seer" framework, we talk about <b>Worth as a Frequency</b>. What does this mean to you?</h2>
+            <button class="option-btn" onclick="nextStep(3, 2)">My value is inherent and radiates from within, regardless of what I do.</button>
+            <button class="option-btn" onclick="nextStep(3, 1)">It means I should try to be high-vibe so good things happen.</button>
+            <button class="option-btn" onclick="nextStep(3, 0)">I feel like I have to "earn" my worth through hard work and helping others.</button>
+        </div>
+
+        <div class="quiz-step" id="step3">
+            <h2>How do you handle a "Mental Fog"—that feeling of being stuck or unheard?</h2>
+            <button class="option-btn" onclick="nextStep(4, 2)">I pause and look for the pattern or "distortion" causing the block.</button>
+            <button class="option-btn" onclick="nextStep(4, 1)">I push through it and try to work harder to get noticed.</button>
+            <button class="option-btn" onclick="nextStep(4, 0)">I vent to friends and hope the feeling goes away eventually.</button>
+        </div>
+
+        <div class="quiz-step" id="step4">
+            <h2>You are so close to your Sight...</h2>
+            <p style="text-align: center; margin-bottom: 20px;">Enter your email to unlock your Seer Profile and a special gift from the Lens.</p>
+            <div class="input-group">
+                <input type="email" id="userEmail" placeholder="your@email.com" required>
+                <button class="action-btn" onclick="showResults()">Reveal My Path</button>
+            </div>
+        </div>
+
+        <div class="quiz-step" id="results">
+            <div id="resultContent" class="result-box">
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let totalScore = 0;
+
+    function nextStep(stepNumber, score) {
+        totalScore += score;
+        document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+        document.getElementById('step' + stepNumber).classList.add('active');
+    }
+
+    function showResults() {
+        const email = document.getElementById('userEmail').value;
+        if(!email.includes('@')) {
+            alert("Please enter a valid email to receive your insights.");
+            return;
+        }
+
+        document.querySelectorAll('.quiz-step').forEach(step => step.classList.remove('active'));
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.classList.add('active');
+
+        let category = "";
+        let paragraph = "";
+        let nextSteps = "";
+        let showCourse = false;
+
+        if (totalScore >= 5) {
+            category = "The Emerging Sovereign";
+            paragraph = "You are already operating with a level of 'Inner Accuracy.' You recognize that the world is a series of patterns and that your 'Sight' is a tool for liberation, not just a burden. You are ready to stop being a victim to other people's projections and start owning your frequency.";
+            nextSteps = "You are ready for the deep dive. The <b>Sovereign Seer Masterclass</b> is designed specifically for your level of pattern recognition.";
+            showCourse = true;
+        } else if (totalScore >= 3) {
+            category = "The Seeking Seer";
+            paragraph = "You have the 'Aha!' moments, but you often get caught in the 'Validation Trap'—looking for others to confirm what you already know to be true. You are beginning to see the 'Harmony Lie' (choosing peace over truth), but you need a framework to hold your boundaries.";
+            nextSteps = "<b>Step X:</b> Spend one week practicing 'Observation as Sovereignty.' Watch your family dynamics without trying to fix them. <br><b>Step Y:</b> Journal on where you are trading your truth for 'Harmony.' <br>Once you feel steady in observation, you'll be ready for the course!";
+            showCourse = true;
+        } else {
+            category = "The Sheltered Seer";
+            paragraph = "You have incredible potential, but you are currently caught in 'Worth as a Transaction.' You feel like you must do things to be valuable. Your 'Sight' is currently clouded by the need to be understood by people who aren't ready to hear you.";
+            nextSteps = "<b>Step X:</b> Practice 'Vulnerable Sovereignty'—allow yourself to be unheard without it meaning you are wrong. <br><b>Step Y:</b> Focus on clearing your mental fog by grounding in nature. <br><b>Step Z:</b> Once you stop seeking validation from the outside, the course will be waiting for you!";
+            showCourse = false;
+        }
+
+        let html = `
+            <h2 style="font-family: 'Pinyon Script'; font-size: 3rem;">${category}</h2>
+            <p>${paragraph}</p>
+            <div class="insight-card">
+                <b>Your Key Insight:</b> Sovereignty isn't about being seen by others; it's about the accuracy of how you see yourself.
+            </div>
+            <div style="margin-top: 30px;">
+                <h3 style="color: var(--gold); margin-bottom: 10px;">Your Next Steps</h3>
+                <p>${nextSteps}</p>
+            </div>
+        `;
+
+        if (showCourse) {
+            html += `
+                <hr style="margin: 30px 0; opacity: 0.2;">
+                <p class="highlight">Yay! You’ve unlocked a sacred path!</p>
+                <p>Because you're ready to sharpen your lens, use this code to join the course for <b>$88</b> (instead of $111):</p>
+                <div class="discount-badge">THELENS</div>
+                <button class="action-btn" onclick="window.location.href='#'" style="margin-top: 15px;">Enter The Course</button>
+            `;
+        }
+
+        html += `
+            <div style="margin-top: 40px; font-family: 'Pinyon Script'; font-size: 1.5rem;">
+                Thank you for sharing your energy with me today! Stay whimsical, stay sharp, and keep seeing the truth. ✨
+            </div>
+        `;
+
+        document.getElementById('resultContent').innerHTML = html;
+    }
+</script>
+
+</body>
+</html>
