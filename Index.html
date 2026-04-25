@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sovereign Seer Assessment</title>
+    <style>
+        body { font-family: 'Georgia', serif; background-color: #f9f9f9; color: #1a1a1a; display: flex; justify-content: center; padding: 20px; line-height: 1.6; }
+        #quiz-container { background: white; padding: 40px; border-radius: 12px; max-width: 500px; width: 100%; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        h2 { font-weight: normal; font-style: italic; margin-bottom: 25px; color: #222; }
+        .question { font-size: 1.3rem; margin-bottom: 25px; }
+        .option-btn { display: block; width: 100%; padding: 15px; margin: 12px 0; border: 1px solid #ddd; background: #fff; cursor: pointer; text-align: left; font-size: 1rem; transition: all 0.2s ease; border-radius: 4px; }
+        .option-btn:hover { background-color: #f0f0f0; border-color: #333; }
+        input[type="email"] { width: 100%; padding: 15px; margin: 20px 0; border: 1px solid #ccc; border-radius: 4px; font-size: 1rem; box-sizing: border-box; }
+        .submit-btn { background: #1a1a1a; color: white; padding: 15px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+        .submit-btn:hover { background: #000; }
+        #email-section, #results-section { display: none; }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <div id="quiz-step">
+        <div id="question-text" class="question">Preparing the lens...</div>
+        <div id="options-container"></div>
+    </div>
+
+    <div id="email-section">
+        <h2>Initiate Integration</h2>
+        <p>Before the reveal, enter your email to anchor your results and join the inner circle of the Sovereign System.</p>
+        <form id="email-form">
+            <input type="email" id="user-email" placeholder="Your primary email..." required>
+            <button type="submit" class="submit-btn">See My Archetype</button>
+        </form>
+    </div>
+
+    <div id="results-section">
+        <h2>Your Sovereign Lens:</h2>
+        <div id="result-display" style="font-size: 1.15rem; border-left: 3px solid #333; padding-left: 20px;"></div>
+        <button onclick="location.reload()" style="margin-top: 30px; background: none; border: none; text-decoration: underline; cursor: pointer; color: #666;">Retake Assessment</button>
+    </div>
+</div>
+
+<script>
+    // 1. Data Definitions
+    const quizData = [
+        {
+            question: "When you feel unheard by those closest to you, what is your internal response?",
+            options: [
+                { text: "I try to explain myself more clearly to find harmony.", type: "Harmony Lie" },
+                { text: "I retreat into mental fog and question my own sight.", type: "Validation Trap" },
+                { text: "I observe their reaction as a projection of their own limit.", type: "Sovereign" }
+            ]
+        },
+        {
+            question: "How do you currently view your value in exchanges?",
+            options: [
+                { text: "My worth is tied to how much I produce or help.", type: "Transaction" },
+                { text: "My worth is a frequency that exists regardless of output.", type: "Frequency" }
+            ]
+        }
+    ];
+
+    let currentIdx = 0;
+    let answers = [];
+
+    // 2. Elements
+    const qText = document.getElementById('question-text');
+    const optCont = document.getElementById('options-container');
+    const qStep = document.getElementById('quiz-step');
+    const eStep = document.getElementById('email-section');
+    const rStep = document.getElementById('results-section');
+    const rDisp = document.getElementById('result-display');
+
+    // 3. Logic
+    function startQuiz() {
+        const q = quizData[currentIdx];
+        qText.innerText = q.question;
+        optCont.innerHTML = '';
+
+        q.options.forEach(opt => {
+            const b = document.createElement('button');
+            b.innerText = opt.text;
+            b.className = 'option-btn';
+            b.onclick = () => {
+                answers.push(opt.type);
+                currentIdx++;
+                if (currentIdx < quizData.length) {
+                    startQuiz();
+                } else {
+                    qStep.style.display = 'none';
+                    eStep.style.display = 'block';
+                }
+            };
+            optCont.appendChild(b);
+        });
+    }
+
+    document.getElementById('email-form').onsubmit = (e) => {
+        e.preventDefault();
+        const email = document.getElementById('user-email').value;
+        console.log("Captured Seer:", email, answers); // For future Zapier connection
+        
+        eStep.style.display = 'none';
+        rStep.style.display = 'block';
+
+        // Result Logic
+        const topResult = answers.includes("Sovereign") ? "The Sovereign Observer" : "The Emerging Seer";
+        rDisp.innerHTML = `<strong>${topResult}</strong><br><br>You are currently navigating the transition from the Validation Trap into Inner Authority. Your path requires dismantling the lens of transactional worth.`;
+    };
+
+    // Initialize
+    window.onload = startQuiz;
+</script>
+
+</body>
+</html>
